@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .container{
+            display:flex;
+            flex-flow: column;
+            justify-content: center;
+            width:500px;
+            margin:20px auto;
+            border:1px solid #ccc;
+            padding:20px;
+        }
+        .form-group{
+            display: flex;
+            flex-flow: column;
+            width: 10px auto;
+            justify-content: center;
+            margin:20px auto;
+        }
+    </style>
+</head>
+<body onload="CreateTableFromJSON()">
+
+    
+        <div class="container">
+            <div id = "status"></div>
+            <form  onsubmit="return mySubmitFunction(event)">
+                <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name = "title">
+                </div>
+    
+                <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" class="form-control" name = "content">
+                </div>
+    
+                <div class="form-group">
+                        <label>Post Code</label>
+                        <button type="submit" class="form-control">Submit</button>
+                </div>
+               
+            </form>
+            <p id="showData"></p>
+        </div>
+        
+</body>
+</html>
+
+<script>
+
+ function mySubmitFunction(e){
+    e.preventDefault()
+    let status = document.querySelector('#status')
+
+    let data = new FormData(e.target)
+    
+    data = {
+        title:data.get("title"),
+        content:data.get("content")
+    }
+
+    console.log(data)
+
+    sendRequest(data)
+    CreateTableFromJSON()
+     
+}
+
+async function sendRequest(data){
+     try{
+        let result = await  fetch('http://localhost/mvc-rest/',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(data)
+        })
+       
+        console.log(result.status)
+        
+        if(result.status === 200) status.innerHTML = "<strong>Sucess!</strong>"
+        else status.innerHTML = "<strong>Something Went Wrong!</strong>"
+        return result
+     }
+     catch(e){
+         console.log('error',e)
+        
+        }
+}
+
+
+function CreateTableFromJSON() {
+        var myBooks = [
+            {
+                "Book ID": "1",
+                "Book Name": "Computer Architecture",
+                "Category": "Computers",
+                "Price": "125.60"
+            },
+            {
+                "Book ID": "2",
+                "Book Name": "Asp.Net 4 Blue Book",
+                "Category": "Programming",
+                "Price": "56.00"
+            },
+            {
+                "Book ID": "3",
+                "Book Name": "Popular Science",
+                "Category": "Science",
+                "Price": "210.40"
+            }
+        ]
+
+        // EXTRACT VALUE FOR HTML HEADER. 
+        // ('Book ID', 'Book Name', 'Category' and 'Price')
+        var col = [];
+        for (var i = 0; i < myBooks.length; i++) {
+            for (var key in myBooks[i]) {
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+        }
+
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+
+        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+        var tr = table.insertRow(-1);                   // TABLE ROW.
+
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < myBooks.length; i++) {
+
+            tr = table.insertRow(-1);
+
+            for (var j = 0; j < col.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = myBooks[i][col[j]];
+            }
+        }
+
+        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+        var divContainer = document.getElementById("showData");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+    }
+
+</script>
