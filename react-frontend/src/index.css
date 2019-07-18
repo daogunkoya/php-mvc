@@ -1,0 +1,21 @@
+.container{
+  width:400px;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  margin:20px auto;
+}
+
+tr{
+  display: flex;
+  flex-flow:flex-start;
+}
+td,th{
+  margin:5px 5px;
+  text-align: center;
+}
+table{
+  border:1px solid #ccc;
+  padding:20px;
+  justify-content: center;
+}
