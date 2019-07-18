@@ -142,6 +142,7 @@ class Router
      */
     protected function convertToStudlyCaps($string)
     {
+        //return ucwords(preg_replace('/-/','',$string));
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
     }
 

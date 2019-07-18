@@ -70,4 +70,15 @@ abstract class Controller
     protected function after()
     {
     }
+
+    public static function response($data){
+        if(is_array($data) && count($data) > 0){
+            header("Access-Control-Allow-Origin: *");
+            //header("Acess-Control-Origin-Headers:*");
+            header("HTTP/1.1 200 Wallet Rest");
+            header("Content-Type:application/json");
+            echo json_encode($data);
+            
+        }
+    }
 }

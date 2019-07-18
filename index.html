@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -25,24 +26,23 @@
         }
     </style>
 </head>
-<body onload="CreateTableFromJSON()">
+<body>
 
     
         <div class="container">
             <div id = "status"></div>
             <form  onsubmit="return mySubmitFunction(event)">
                 <div class="form-group">
-                        <label>Name</label>
+                        <label>Title</label>
                         <input type="text" class="form-control" name = "title">
                 </div>
     
                 <div class="form-group">
-                        <label>Address</label>
+                        <label>Contentt</label>
                         <input type="text" class="form-control" name = "content">
                 </div>
     
                 <div class="form-group">
-                        <label>Post Code</label>
                         <button type="submit" class="form-control">Submit</button>
                 </div>
                
@@ -55,7 +55,10 @@
 
 <script>
 
- function mySubmitFunction(e){
+$(function(){
+
+        fetch();
+    function mySubmitFunction(e){
     e.preventDefault()
     let status = document.querySelector('#status')
 
@@ -67,9 +70,9 @@
     }
 
     console.log(data)
-
+    const records = fetch()
     sendRequest(data)
-    CreateTableFromJSON()
+    
      
 }
 
@@ -95,34 +98,27 @@ async function sendRequest(data){
         }
 }
 
+async function fetch(){
+    try{
+     let records = await fetch('http://localhost/rest-test/api/posts/index.json')
+     
+         records = records.json();
+        console.log('data',records)
+        return records
 
-function CreateTableFromJSON() {
-        var myBooks = [
-            {
-                "Book ID": "1",
-                "Book Name": "Computer Architecture",
-                "Category": "Computers",
-                "Price": "125.60"
-            },
-            {
-                "Book ID": "2",
-                "Book Name": "Asp.Net 4 Blue Book",
-                "Category": "Programming",
-                "Price": "56.00"
-            },
-            {
-                "Book ID": "3",
-                "Book Name": "Popular Science",
-                "Category": "Science",
-                "Price": "210.40"
-            }
-        ]
+    }catch(error){ 
+        //console.log('error',error) 
+        }
+}
+
+async function CreateTableFromJSON(records) {
+      
 
         // EXTRACT VALUE FOR HTML HEADER. 
         // ('Book ID', 'Book Name', 'Category' and 'Price')
         var col = [];
-        for (var i = 0; i < myBooks.length; i++) {
-            for (var key in myBooks[i]) {
+        for (var i = 0; i < records.length; i++) {
+            for (var key in records[i]) {
                 if (col.indexOf(key) === -1) {
                     col.push(key);
                 }
@@ -143,13 +139,13 @@ function CreateTableFromJSON() {
         }
 
         // ADD JSON DATA TO THE TABLE AS ROWS.
-        for (var i = 0; i < myBooks.length; i++) {
+        for (var i = 0; i < records.length; i++) {
 
             tr = table.insertRow(-1);
 
             for (var j = 0; j < col.length; j++) {
                 var tabCell = tr.insertCell(-1);
-                tabCell.innerHTML = myBooks[i][col[j]];
+                tabCell.innerHTML = records[i][col[j]];
             }
         }
 
@@ -158,5 +154,9 @@ function CreateTableFromJSON() {
         divContainer.innerHTML = "";
         divContainer.appendChild(table);
     }
+
+})
+
+ 
 
 </script>
