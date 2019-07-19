@@ -24,14 +24,29 @@ class Validator{
 		}
 	  }
 	  
-	  /*
-	   *	Check Password Match
-	   */
-	   public function passwordsMatch($pw1,$pw2){
-		if($pw1 == $pw2){
-			return true;
-		} else {
-			return false;
+	
+	   private static function sanitizeInput($list){
+		$filtered = [];
+		foreach($list as $key=>$value){
+		   $filtered[$key]  = preg_replace('/\s+/','', $list[$key]);
+		  // $filtered[$key]  = preg_replace('/[a-z-]+/i','', $list[$key]);
 		}
-	   }
+		return $filtered;
+	}
+
+	public static function checkStringLength($list){
+		$string = [];
+		foreach($list as $key => $value){
+			if(strlen($list[$key]) > 3  && strlen($list[$key]) < 255 ){
+				$string[$key] = strtoupper($list[$key]);
+				return true;
+				
+			}else{
+				return false;
+			} 
+		}
+
+		return $string;
+		
+	}
 }

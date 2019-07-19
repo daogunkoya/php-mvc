@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers;
-
+use App\Validator;
 use \Core\View;
 use App\Models\Post;
 
@@ -61,7 +61,12 @@ class Posts extends \Core\Controller
         $id = $this->params['id'];
         if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($id)){
             $data = json_decode(file_get_contents('php://input'),true);
-           $post = Post::update($id,$data);
+           
+           if(Validator::checkStringLength($data)){
+            $post = Post::update($id,$data);
+           }else{
+               return static::response(['status'=>403]);
+           }
         }
         return static::response($post); 
     }
